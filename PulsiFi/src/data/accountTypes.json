@@ -1,0 +1,26 @@
+[
+  {
+    "id": "cash_wallet",
+    "name": "Cash / Wallet",
+    "description": "Track your physical cash",
+    "icon": "cash"
+  },
+  {
+    "id": "bank_account",
+    "name": "Bank Account",
+    "description": "Connect via Plaid or SMS",
+    "icon": "bank"
+  },
+  {
+    "id": "credit_debit",
+    "name": "Credit / Debit Card",
+    "description": "Manage card transactions",
+    "icon": "credit-card"
+  },
+  {
+    "id": "upi_digital",
+    "name": "UPI / Digital Wallet",
+    "description": "Track digital wallet balance",
+    "icon": "qrcode"
+  }
+]

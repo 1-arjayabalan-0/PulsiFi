@@ -1,0 +1,34 @@
+[
+  {
+    "id": "bank_account_1",
+    "name": "Checking Account",
+    "type": "bank_account",
+    "balance": 3245.65,
+    "currency": "USD",
+    "portfolio_id": "my_finances"
+  },
+  {
+    "id": "credit_card_1",
+    "name": "Credit Card",
+    "type": "credit_debit",
+    "balance": -450.25,
+    "currency": "USD",
+    "portfolio_id": "my_finances"
+  },
+  {
+    "id": "cash_wallet_1",
+    "name": "Cash Wallet",
+    "type": "cash_wallet",
+    "balance": 150.00,
+    "currency": "USD",
+    "portfolio_id": "my_finances"
+  },
+  {
+    "id": "digital_wallet_1",
+    "name": "Digital Wallet",
+    "type": "upi_digital",
+    "balance": 75.50,
+    "currency": "USD",
+    "portfolio_id": "my_finances"
+  }
+]

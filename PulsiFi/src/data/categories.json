@@ -1,0 +1,50 @@
+[
+  {
+    "id": "food_dining",
+    "name": "Food & Dining",
+    "icon": "food",
+    "color": "#FF9500"
+  },
+  {
+    "id": "transportation",
+    "name": "Transportation",
+    "icon": "car",
+    "color": "#007AFF"
+  },
+  {
+    "id": "entertainment",
+    "name": "Entertainment",
+    "icon": "film",
+    "color": "#5856D6"
+  },
+  {
+    "id": "utilities",
+    "name": "Utilities",
+    "icon": "lightbulb",
+    "color": "#FF2D55"
+  },
+  {
+    "id": "salary",
+    "name": "Salary",
+    "icon": "briefcase",
+    "color": "#4CD964"
+  },
+  {
+    "id": "shopping",
+    "name": "Shopping",
+    "icon": "shopping-bag",
+    "color": "#AF52DE"
+  },
+  {
+    "id": "health",
+    "name": "Health",
+    "icon": "medical",
+    "color": "#FF3B30"
+  },
+  {
+    "id": "other",
+    "name": "Other",
+    "icon": "dots-horizontal",
+    "color": "#8E8E93"
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "id": "my_finances",
+    "name": "My Finances",
+    "currency": "USD",
+    "total_balance": 3021.90,
+    "created_at": "2025-01-15"
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "type": "expense",
+    "amount": 45.99,
+    "category": "Food & Dining",
+    "description": "Grocery shopping",
+    "date": "2025-09-12",
+    "account_id": "bank_account_1"
+  },
+  {
+    "id": "2",
+    "type": "income",
+    "amount": 2500.00,
+    "category": "Salary",
+    "description": "Monthly salary",
+    "date": "2025-09-01",
+    "account_id": "bank_account_1"
+  },
+  {
+    "id": "3",
+    "type": "expense",
+    "amount": 9.99,
+    "category": "Entertainment",
+    "description": "Streaming subscription",
+    "date": "2025-09-10",
+    "account_id": "credit_card_1"
+  },
+  {
+    "id": "4",
+    "type": "expense",
+    "amount": 35.50,
+    "category": "Transportation",
+    "description": "Fuel",
+    "date": "2025-09-08",
+    "account_id": "credit_card_1"
+  },
+  {
+    "id": "5",
+    "type": "expense",
+    "amount": 120.00,
+    "category": "Utilities",
+    "description": "Electricity bill",
+    "date": "2025-09-05",
+    "account_id": "bank_account_1"
+  }
+]
