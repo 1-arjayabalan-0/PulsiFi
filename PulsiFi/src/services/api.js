@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertService from '../utils/alert';
 import { Platform } from 'react-native';
+import { API_URL, API_URL_ANDROID } from '@env';
 
 // Global reference to auth context for logout functionality
 let authContextRef = null;
@@ -10,11 +11,10 @@ export const setAuthContext = (authContext) => {
   authContextRef = authContext;
 };
 
-// API base URL - update with your backend URL
-// For Android emulator, use 10.0.2.2 instead of localhost
-const API_URL = Platform.OS === 'android' 
-  ? 'http://10.0.2.2:3000/api' 
-  : 'http://localhost:3000/api';
+// API base URL - using environment variables
+const BASE_API_URL = Platform.OS === 'android' 
+  ? API_URL_ANDROID 
+  : API_URL;
 
 /**
  * Handles API requests with authentication
@@ -28,7 +28,7 @@ class ApiService {
    * @returns {Promise<any>} Response data
    */
   static async request(endpoint, options = {}, showAlerts = true) {
-    const url = `${API_URL}${endpoint}`;
+    const url = `${BASE_API_URL}${endpoint}`;
     
     // Default headers
     const headers = {
