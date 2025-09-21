@@ -32,7 +32,7 @@ const Card = ({
           backgroundColor: theme.colors.card,
           borderRadius: theme.borderRadius.md,
           borderWidth: 1,
-          borderColor: theme.colors.border,
+          borderColor: theme.colors.primary,
         };
       case 'default':
       default:

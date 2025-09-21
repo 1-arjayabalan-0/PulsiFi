@@ -53,7 +53,7 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
           },
         ]}>
         <LinearGradient
-          colors={['#667eea', '#764ba2']}
+          colors={['#00d09e', '#097a77']}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.gradientIndicator}
@@ -102,7 +102,7 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
                   style={styles.addButtonContainer}>
                   <View style={styles.addButton}>
                     <LinearGradient
-                      colors={['#667eea', '#764ba2']}
+                      colors={['#00d09e', '#097a77']}
                       style={styles.addButtonGradient}>
                       <Icon
                         name={getIconName(route.name)}
@@ -139,7 +139,7 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
                   <Icon
                     name={getIconName(route.name)}
                     size={24}
-                    color={isFocused ? '#667eea' : '#8e8e93'}
+                    color={isFocused ? '#00d09e' : '#8e8e93'}
                   />
                 </Animated.View>
               </TouchableOpacity>

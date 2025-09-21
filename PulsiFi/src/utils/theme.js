@@ -5,26 +5,26 @@
 
 export const colors = {
   // Primary brand colors
-  primary: '#1DD1A1',
-  primaryLight: '#1DD1A120',
-  secondary: '#007AFF',
-  secondaryLight: '#007AFF20',
-  tertiary: '#5856D6',
-  tertiaryLight: '#5856D620',
+  primary: '#00d09e',
+  primaryLight: '#00d09e20',
+  secondary: '#097a77',
+  secondaryLight: '#097a7720',
+  tertiary: '#00a896',
+  tertiaryLight: '#00a89620',
   
   // UI colors
   background: '#F8F9FA',
   card: '#FFFFFF',
   text: '#333333',
   textSecondary: '#666666',
-  border: '#F0F0F0',
+  border: '#FFFFFF',
   error: '#FF3B30',
   success: '#34C759',
   warning: '#FF9500',
-  info: '#5AC8FA',
+  info: '#00a896',
   
   // Tab bar colors
-  tabBarActive: '#1DD1A1',
+  tabBarActive: '#00d09e',
   tabBarInactive: 'gray',
   tabBarBackground: '#FFFFFF',
 };

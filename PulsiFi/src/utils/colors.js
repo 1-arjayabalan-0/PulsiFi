@@ -1,9 +1,9 @@
 // Color palette for the new design
 export const colors = {
-  primary: '#5E35B1', // Deep purple
-  primaryLight: '#7E57C2',
-  primaryDark: '#4527A0',
-  accent: '#00BCD4', // Cyan
+  primary: '#00d09e', // Primary green
+  primaryLight: '#00d09e80',
+  primaryDark: '#00a07e',
+  accent: '#097a77', // Secondary green
   white: '#FFFFFF',
   black: '#000000',
   gray: '#9E9E9E',
@@ -19,17 +19,17 @@ export const colors = {
 // Gradient configurations
 export const gradients = {
   primary: {
-    colors: ['#7E57C2', '#5E35B1'],
+    colors: ['#00d09e', '#097a77'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   accent: {
-    colors: ['#00BCD4', '#00ACC1'],
+    colors: ['#097a77', '#00a07e'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },
   button: {
-    colors: ['#00BCD4', '#00ACC1'],
+    colors: ['#00d09e', '#097a77'],
     start: { x: 0, y: 0 },
     end: { x: 1, y: 1 },
   },

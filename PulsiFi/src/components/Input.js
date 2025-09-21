@@ -34,7 +34,7 @@ const Input = ({
         style={[
           styles.input,
           {
-            borderColor: error ? theme.colors.error : theme.colors.border,
+            borderColor: error ? theme.colors.error : theme.colors.primary,
             color: theme.colors.text,
             backgroundColor: disabled ? theme.colors.border : 'transparent',
           },
