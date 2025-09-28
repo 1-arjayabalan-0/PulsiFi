@@ -1,9 +1,9 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Animated, View, Pressable } from 'react-native';
 import { useTheme } from './ThemeProvider';
 
 /**
- * Button component with consistent styling
+ * Modern Button component with ripple effect and consistent styling
  * @param {Object} props - Component props
  * @param {string} props.title - Button text
  * @param {Function} props.onPress - Function to call when button is pressed
@@ -11,6 +11,7 @@ import { useTheme } from './ThemeProvider';
  * @param {string} props.size - Button size (small, medium, large)
  * @param {boolean} props.disabled - Whether the button is disabled
  * @param {boolean} props.loading - Whether to show a loading indicator
+ * @param {boolean} props.ripple - Whether to show ripple effect
  * @param {Object} props.style - Additional style for the button
  * @param {Object} props.textStyle - Additional style for the button text
  */
@@ -21,11 +22,38 @@ const Button = ({
   size = 'medium',
   disabled = false,
   loading = false,
+  ripple = true,
   style,
   textStyle,
   ...props
 }) => {
   const theme = useTheme();
+  const [isPressed, setIsPressed] = React.useState(false);
+  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+  console.log("scaleAnim", scaleAnim);
+  
+  // Animation for button press
+  const handlePressIn = () => {
+    setIsPressed(true);
+    if (ripple) {
+      Animated.timing(scaleAnim, {
+        toValue: 0.97,
+        duration: 100,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
+  
+  const handlePressOut = () => {
+    setIsPressed(false);
+    if (ripple) {
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    }
+  };
   
   // Determine button styles based on variant
   const getButtonStyles = () => {
@@ -70,7 +98,7 @@ const Button = ({
       case 'secondary':
       default:
         return {
-          color: '#FFFFFF',
+          color: theme.components.button.textColor,
         };
     }
   };
@@ -93,9 +121,9 @@ const Button = ({
       case 'medium':
       default:
         return {
-          paddingVertical: theme.spacing.sm,
-          paddingHorizontal: theme.spacing.lg,
-          borderRadius: theme.borderRadius.md,
+          paddingVertical: theme.components.button.padding / 2,
+          paddingHorizontal: theme.components.button.padding,
+          borderRadius: theme.components.button.radius,
         };
     }
   };
@@ -114,7 +142,7 @@ const Button = ({
       case 'medium':
       default:
         return {
-          fontSize: theme.typography.fontSizes.md,
+          fontSize: theme.typography.fontSizes.md, // Button text size (16sp)
         };
     }
   };
@@ -126,6 +154,7 @@ const Button = ({
     getSizeStyles(),
     disabled && styles.disabled,
     style,
+    { transform: [{ scale: 1 }] },
   ];
 
   const textStyles = [
@@ -136,20 +165,43 @@ const Button = ({
     textStyle,
   ];
 
+  // Ripple effect component
+  const RippleEffect = ({ isPressed }) => {
+    if (!ripple || !isPressed) return null;
+    
+    return (
+      <View style={[
+        StyleSheet.absoluteFill,
+        styles.rippleContainer,
+        { borderRadius: getSizeStyles().borderRadius }
+      ]}>
+        <Animated.View style={[
+          styles.ripple,
+          { backgroundColor: variant === 'primary' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.05)' }
+        ]} />
+      </View>
+    );
+  };
+
   return (
-    <TouchableOpacity
-      style={buttonStyles}
-      onPress={onPress}
-      disabled={disabled || loading}
-      activeOpacity={0.8}
-      {...props}
-    >
-      {loading ? (
-        <ActivityIndicator color={getTextStyles().color} size="small" />
-      ) : (
-        <Text style={textStyles}>{title}</Text>
-      )}
-    </TouchableOpacity>
+    <Animated.View style={{ transform: [{ scale: 1 }] }}>
+      <Pressable
+        style={buttonStyles}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        disabled={disabled || loading}
+        android_ripple={ripple ? { color: 'rgba(255,255,255,0.2)' } : null}
+        {...props}
+      >
+        <RippleEffect isPressed={isPressed} />
+        {loading ? (
+          <ActivityIndicator color={getTextStyles().color} size="small" />
+        ) : (
+          <Text style={textStyles}>{title}</Text>
+        )}
+      </Pressable>
+    </Animated.View>
   );
 };
 
@@ -159,6 +211,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
+    overflow: 'hidden',
   },
   text: {
     fontWeight: '600',
@@ -169,6 +222,16 @@ const styles = StyleSheet.create({
   },
   disabledText: {
     opacity: 0.7,
+  },
+  rippleContainer: {
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  ripple: {
+    width: '100%',
+    height: '100%',
+    opacity: 0.3,
   },
 });
 

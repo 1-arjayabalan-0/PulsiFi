@@ -68,7 +68,8 @@ const CustomTabBar = ({state, descriptors, navigation}) => {
           {state.routes.map((route, index) => {
             const {options} = descriptors[route.key];
             const isFocused = state.index === index;
-
+            console.log("isFocused", isFocused);
+            
             const onPress = () => {
               const event = navigation.emit({
                 type: 'tabPress',
