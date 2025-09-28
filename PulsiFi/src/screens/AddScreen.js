@@ -23,13 +23,13 @@ const AddScreen = ({ navigation }) => {
 
         <TouchableOpacity 
           style={styles.optionCard}
-          onPress={() => navigation.navigate('AddSubAccount')}
+          onPress={() => navigation.navigate('CreateBankAccount')}
         >
           <View style={[styles.iconContainer, { backgroundColor: '#007AFF20' }]}>
             <Icon name="wallet" size={32} color="#007AFF" />
           </View>
-          <Text style={styles.optionTitle}>Add Account</Text>
-          <Text style={styles.optionDescription}>Connect a new account</Text>
+          <Text style={styles.optionTitle}>Add Bank Account</Text>
+          <Text style={styles.optionDescription}>Add a new bank account</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 

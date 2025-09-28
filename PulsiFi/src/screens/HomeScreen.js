@@ -5,9 +5,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Text, Card, Button, useTheme } from '../components';
 import AccountService from '../services/account';
 import TransactionService from '../services/transaction';
+import { useCurrency } from '../context/CurrencyContext';
 
 const HomeScreen = ({ navigation }) => {
   const theme = useTheme();
+  const { activeCurrencySymbol } = useCurrency();
   const [totalBalance, setTotalBalance] = useState(0);
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
@@ -77,9 +79,17 @@ const HomeScreen = ({ navigation }) => {
       </View>
 
       <Card style={[styles.balanceCard, { backgroundColor: theme.colors.primary }]}>
-        <Text variant="body1" style={styles.balanceLabel}>Total Balance</Text>
+        <View style={styles.balanceHeader}>
+          <Text variant="body1" style={styles.balanceLabel}>Total Balance</Text>
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={() => navigation.navigate('EditPortfolio', { portfolio: accounts[0]?.portfolio })}
+          >
+            <Icon name="pencil" size={18} color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
         <Text variant="h1" style={styles.balanceAmount}>
-          {loading ? 'Loading...' : `$${totalBalance.toFixed(2)}`}
+          {loading ? 'Loading...' : `${activeCurrencySymbol}${totalBalance.toFixed(2)}`}
         </Text>
         <Button 
           variant="secondary"
@@ -122,7 +132,7 @@ const HomeScreen = ({ navigation }) => {
                   </View>
                   <Text variant="subtitle" style={styles.accountName}>{account.name}</Text>
                   <Text variant="h3" style={styles.accountBalance}>
-                    ${account.balance.toFixed(2)}
+                    {activeCurrencySymbol}{account.balance.toFixed(2)}
                   </Text>
                 </Card>
               ))
@@ -174,7 +184,7 @@ const HomeScreen = ({ navigation }) => {
                   variant="h3"
                   style={[styles.transactionAmount, {color: transactionColor}]}
                 >
-                  {isIncome ? '+' : '-'}${transaction.amount.toFixed(2)}
+                  {isIncome ? '+' : '-'}{activeCurrencySymbol}{transaction.amount.toFixed(2)}
                 </Text>
               </Card>
             );
@@ -195,6 +205,15 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     marginBottom: 5,
+  },
+  balanceHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+  },
+  editButton: {
+    padding: 5,
   },
   dateText: {
     marginTop: 5,

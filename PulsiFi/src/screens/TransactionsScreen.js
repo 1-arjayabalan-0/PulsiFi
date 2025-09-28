@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 // Import services
 import TransactionService from '../services/transaction';
 import AccountService from '../services/account';
+import { useCurrency } from '../context/CurrencyContext';
 
 const TransactionsScreen = () => {
   const [filter, setFilter] = useState('all'); // 'all', 'income', 'expense'
@@ -13,6 +14,7 @@ const TransactionsScreen = () => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { activeCurrencySymbol } = useCurrency();
 
   // Define categories inline (since we don't have a category service)
   const categories = [
@@ -91,7 +93,7 @@ const TransactionsScreen = () => {
         </View>
         <View style={styles.amountContainer}>
           <Text style={[styles.amount, { color: item.type === 'income' ? '#4CD964' : '#FF3B30' }]}>
-            {item.type === 'income' ? '+' : '-'}${item.amount.toFixed(2)}
+            {item.type === 'income' ? '+' : '-'}{activeCurrencySymbol}{item.amount.toFixed(2)}
           </Text>
           <Text style={styles.date}>{new Date(item.date).toLocaleDateString()}</Text>
         </View>

@@ -16,10 +16,15 @@ import ProfileScreen from '../screens/ProfileScreen';
 import AddSubAccountScreen from '../screens/AddSubAccountScreen';
 import AddTransactionScreen from '../screens/AddTransactionScreen';
 import CreatePortfolioScreen from '../screens/CreatePortfolioScreen';
+import EditPortfolioScreen from '../screens/EditPortfolioScreen';
 import CreateFirstPortfolioScreen from '../screens/CreateFirstPortfolioScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import ToastTestScreen from '../screens/ToastTestScreen';
+import BankSelectionScreen from '../screens/BankSelectionScreen';
+import BankAccountDetailsScreen from '../screens/BankAccountDetailsScreen';
+import CreateBankAccountScreen from '../screens/CreateBankAccountScreen';
+import CurrencyTableScreen from '../screens/CurrencyTableScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -85,6 +90,33 @@ const AppStack = () => {
           }}
         />
         <Stack.Screen
+          name="BankSelection"
+          component={BankSelectionScreen}
+          options={{
+            headerShown: true,
+            headerTitle: 'Select Bank',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
+          name="BankAccountDetails"
+          component={BankAccountDetailsScreen}
+          options={{
+            headerShown: true,
+            headerTitle: 'Account Details',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
+          name="CreateBankAccount"
+          component={CreateBankAccountScreen}
+          options={{
+            headerShown: true,
+            headerTitle: 'Add Bank Account',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
           name="AddTransaction"
           component={AddTransactionScreen}
           options={{
@@ -100,6 +132,22 @@ const AppStack = () => {
             headerShown: true,
             headerTitle: 'Create Portfolio',
             headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
+          name="EditPortfolio"
+          component={EditPortfolioScreen}
+          options={{
+            headerShown: true,
+            headerTitle: 'Edit Portfolio',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
+          name="CurrencyTable"
+          component={CurrencyTableScreen}
+          options={{
+            headerShown: false,
           }}
         />
       </Stack.Group>

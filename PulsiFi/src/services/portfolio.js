@@ -9,7 +9,7 @@ class PortfolioService {
    * Create a new portfolio
    * @param {Object} portfolioData - Portfolio data
    * @param {string} portfolioData.name - Portfolio name
-   * @param {string} portfolioData.currency - Portfolio currency (default: USD)
+   * @param {string} portfolioData.currencyId - Portfolio currency ID
    * @returns {Promise<Object>} Created portfolio data
    */
   static async createPortfolio(portfolioData) {

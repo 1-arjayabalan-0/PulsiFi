@@ -11,6 +11,8 @@ import portfolioRoutes from './routes/portfolio.routes';
 import accountRoutes from './routes/account.routes';
 import transactionRoutes from './routes/transaction.routes';
 import categoryRoutes from './routes/category.routes';
+import bankRoutes from './routes/bank.routes';
+import currencyRoutes from './routes/currency.routes';
 
 // Import middleware
 import { applySecurityHeaders } from './middleware/security.middleware';
@@ -45,6 +47,8 @@ app.use('/api/portfolios', portfolioRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/banks', bankRoutes);
+app.use('/api/currencies', currencyRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

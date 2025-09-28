@@ -1,28 +1,22 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet, ScrollView, ActivityIndicator} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Text, Input, Button, Select, Card, useTheme} from '../components';
 import {useAuth} from '../context/AuthContext';
+import {useCurrency} from '../context/CurrencyContext';
 import PortfolioService from '../services/portfolio';
 import AlertService from '../utils/alert';
 
 const CreateFirstPortfolioScreen = ({navigation}) => {
   const theme = useTheme();
   const {completeFirstTimeSetup} = useAuth();
+  const {currencies, isLoading: isCurrenciesLoading, getCurrencyOptions} = useCurrency();
   const [accountName, setAccountName] = useState('My Portfolio');
   const [currency, setCurrency] = useState('USD');
   const [isLoading, setIsLoading] = useState(false);
 
-  const currencyOptions = [
-    {label: 'USD - United States Dollar', value: 'USD'},
-    {label: 'EUR - Euro', value: 'EUR'},
-    {label: 'GBP - British Pound', value: 'GBP'},
-    {label: 'JPY - Japanese Yen', value: 'JPY'},
-    {label: 'CAD - Canadian Dollar', value: 'CAD'},
-    {label: 'AUD - Australian Dollar', value: 'AUD'},
-    {label: 'CHF - Swiss Franc', value: 'CHF'},
-    {label: 'CNY - Chinese Yuan', value: 'CNY'},
-  ];
+  // Get currency options from the API
+  const currencyOptions = getCurrencyOptions();
 
   const handleCreatePortfolio = async () => {
     if (!accountName.trim()) {
@@ -89,13 +83,20 @@ const CreateFirstPortfolioScreen = ({navigation}) => {
 
         <View style={styles.inputGroup}>
           <Text variant="label">Base Currency</Text>
-          <Select
-            value={currency}
-            onValueChange={setCurrency}
-            options={currencyOptions}
-            placeholder="Select currency"
-            style={styles.input}
-          />
+          {isCurrenciesLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="small" color={theme.colors.primary} />
+              <Text variant="caption" style={styles.loadingText}>Loading currencies...</Text>
+            </View>
+          ) : (
+            <Select
+              value={currency}
+              onValueChange={setCurrency}
+              options={currencyOptions}
+              placeholder="Select currency"
+              style={styles.input}
+            />
+          )}
         </View>
       </View>
 
@@ -197,6 +198,16 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 8,
+  },
+  loadingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 12,
+    padding: 8,
+  },
+  loadingText: {
+    marginLeft: 8,
+    opacity: 0.7,
   },
   accountSection: {
     marginBottom: 24,

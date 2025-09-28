@@ -16,7 +16,8 @@ const ProfileScreen = ({ navigation }) => {
       async () => {
         await logout();
       },
-      'Log Out'
+      'Log Out',
+      'Logout'
     );
   };
   return (
@@ -73,7 +74,10 @@ const ProfileScreen = ({ navigation }) => {
           <Icon name="chevron-right" size={20} color="#999" />
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.settingItem}>
+        <TouchableOpacity 
+          style={styles.settingItem}
+          onPress={() => navigation.navigate('CurrencyTable')}
+        >
           <Icon name="currency-usd" size={24} color="#333" style={styles.settingIcon} />
           <Text style={styles.settingText}>Currency</Text>
           <Icon name="chevron-right" size={20} color="#999" />

@@ -131,7 +131,7 @@ export const AlertProvider = ({ children }) => {
     });
   };
 
-  const confirmDestructive = (message, onConfirm, title = 'Confirm', options = {}) => {
+  const confirmDestructive = (message, onConfirm, title = 'Confirm', confirmText = 'Delete', options = {}) => {
     showConfirm({
       type: 'error',
       title,
@@ -140,7 +140,7 @@ export const AlertProvider = ({ children }) => {
         hideConfirm();
         onConfirm();
       },
-      confirmText: 'Delete',
+      confirmText: confirmText,
       cancelText: 'Cancel',
       destructive: true,
       ...options,

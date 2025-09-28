@@ -1,4 +1,7 @@
 {
   "name": "PulsiFi",
-  "displayName": "PulsiFi"
+  "displayName": "PulsiFi",
+  "plugins": [
+    "expo-secure-store"
+  ]
 }

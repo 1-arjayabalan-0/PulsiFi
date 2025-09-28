@@ -5,11 +5,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import services
 import TransactionService from '../services/transaction';
+import { useCurrency } from '../context/CurrencyContext';
 
 const InsightsScreen = () => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { activeCurrencySymbol } = useCurrency();
 
   // Define categories inline (since we don't have a category service)
   const categories = [
@@ -109,13 +111,13 @@ const InsightsScreen = () => {
             <View style={styles.summaryCard}>
               <Text style={styles.summaryLabel}>Income</Text>
               <Text style={[styles.summaryAmount, { color: '#4CD964' }]}>
-                ${totalIncome.toFixed(2)}
+                {activeCurrencySymbol}{totalIncome.toFixed(2)}
               </Text>
             </View>
             <View style={styles.summaryCard}>
               <Text style={styles.summaryLabel}>Expenses</Text>
               <Text style={[styles.summaryAmount, { color: '#FF3B30' }]}>
-                ${totalExpenses.toFixed(2)}
+                {activeCurrencySymbol}{totalExpenses.toFixed(2)}
               </Text>
             </View>
           </View>
@@ -142,7 +144,7 @@ const InsightsScreen = () => {
                       />
                     </View>
                   </View>
-                  <Text style={styles.categoryAmount}>${category.amount.toFixed(2)}</Text>
+                  <Text style={styles.categoryAmount}>{activeCurrencySymbol}{category.amount.toFixed(2)}</Text>
                 </View>
               ))
             )}
@@ -153,7 +155,7 @@ const InsightsScreen = () => {
             <View style={styles.monthlyOverviewCard}>
               <Text style={styles.monthlyOverviewText}>Net Savings</Text>
               <Text style={[styles.monthlyOverviewAmount, { color: totalIncome - totalExpenses >= 0 ? '#4CD964' : '#FF3B30' }]}>
-                ${(totalIncome - totalExpenses).toFixed(2)}
+                {activeCurrencySymbol}{(totalIncome - totalExpenses).toFixed(2)}
               </Text>
               <View style={styles.savingsRateContainer}>
                 <Text style={styles.savingsRateLabel}>Savings Rate</Text>

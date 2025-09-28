@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/Input';
@@ -23,6 +24,10 @@ const RegisterScreen = ({ navigation }) => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [passwordFeedback, setPasswordFeedback] = useState('');
   const { register, isLoading, authError } = useAuth();
 
   // Reset errors when inputs change
@@ -36,6 +41,41 @@ const RegisterScreen = ({ navigation }) => {
 
   useEffect(() => {
     setPasswordError('');
+    
+    // Password strength validation
+    if (password) {
+      const hasMinLength = password.length >= 8;
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      
+      let strength = 0;
+      let feedback = '';
+      
+      if (hasMinLength) strength += 1;
+      if (hasUpperCase) strength += 1;
+      if (hasNumber) strength += 1;
+      if (hasSpecialChar) strength += 1;
+      
+      setPasswordStrength(strength);
+      
+      if (strength === 0) {
+        feedback = 'Very weak password';
+      } else if (strength === 1) {
+        feedback = 'Weak password';
+      } else if (strength === 2) {
+        feedback = 'Fair password';
+      } else if (strength === 3) {
+        feedback = 'Good password';
+      } else {
+        feedback = 'Strong password';
+      }
+      
+      setPasswordFeedback(feedback);
+    } else {
+      setPasswordStrength(0);
+      setPasswordFeedback('');
+    }
   }, [password]);
 
   useEffect(() => {
@@ -62,8 +102,17 @@ const RegisterScreen = ({ navigation }) => {
     if (!password.trim()) {
       setPasswordError('Password is required');
       isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
+    } else if (password.length < 8) {
+      setPasswordError('Password must be at least 8 characters');
+      isValid = false;
+    } else if (!/[A-Z]/.test(password)) {
+      setPasswordError('Password must contain at least one uppercase letter');
+      isValid = false;
+    } else if (!/[0-9]/.test(password)) {
+      setPasswordError('Password must contain at least one number');
+      isValid = false;
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      setPasswordError('Password must contain at least one special character');
       isValid = false;
     }
 
@@ -143,12 +192,57 @@ const RegisterScreen = ({ navigation }) => {
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={!passwordVisible}
             style={styles.input}
             error={passwordError}
           />
+          <TouchableOpacity 
+            style={styles.eyeIcon} 
+            onPress={() => setPasswordVisible(!passwordVisible)}
+          >
+            <Icon 
+              name={passwordVisible ? "eye-off" : "eye"} 
+              size={24} 
+              color={colors.primary} 
+            />
+          </TouchableOpacity>
         </View>
         {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+        
+        {password.length > 0 && (
+          <View style={styles.passwordStrengthContainer}>
+            <View style={styles.strengthBarContainer}>
+              <Animated.View 
+                style={[
+                  styles.strengthBar, 
+                  { 
+                    width: `${25 * passwordStrength}%`,
+                    backgroundColor: 
+                      passwordStrength === 0 ? '#FF3B30' : 
+                      passwordStrength === 1 ? '#FF9500' :
+                      passwordStrength === 2 ? '#FFCC00' :
+                      passwordStrength === 3 ? '#34C759' : '#30D158'
+                  }
+                ]} 
+              />
+            </View>
+            <Text style={[
+              styles.passwordFeedback,
+              { 
+                color: 
+                  passwordStrength === 0 ? '#FF3B30' : 
+                  passwordStrength === 1 ? '#FF9500' :
+                  passwordStrength === 2 ? '#FFCC00' :
+                  passwordStrength === 3 ? '#34C759' : '#30D158'
+              }
+            ]}>
+              {passwordFeedback}
+            </Text>
+            <Text style={styles.passwordRequirements}>
+              Password must contain at least 8 characters, one uppercase letter, one number, and one special character.
+            </Text>
+          </View>
+        )}
 
         <View style={styles.inputContainer}>
           <Icon name="lock-check" size={24} color={colors.primary} style={styles.inputIcon} />
@@ -156,10 +250,20 @@ const RegisterScreen = ({ navigation }) => {
             placeholder="Confirm Password"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
-            secureTextEntry
+            secureTextEntry={!confirmPasswordVisible}
             style={styles.input}
             error={confirmPasswordError}
           />
+          <TouchableOpacity 
+            style={styles.eyeIcon} 
+            onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
+          >
+            <Icon 
+              name={confirmPasswordVisible ? "eye-off" : "eye"} 
+              size={24} 
+              color={colors.primary} 
+            />
+          </TouchableOpacity>
         </View>
         {confirmPasswordError ? <Text style={styles.errorText}>{confirmPasswordError}</Text> : null}
 
@@ -209,6 +313,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 5,
+    position: 'relative',
   },
   inputIcon: {
     marginRight: 10,
@@ -236,6 +341,37 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     fontWeight: '600',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 10,
+    height: '100%',
+    justifyContent: 'center',
+  },
+  passwordStrengthContainer: {
+    marginLeft: 34,
+    marginBottom: 15,
+  },
+  strengthBarContainer: {
+    height: 4,
+    backgroundColor: '#E5E5EA',
+    borderRadius: 2,
+    marginBottom: 5,
+    width: '100%',
+  },
+  strengthBar: {
+    height: '100%',
+    borderRadius: 2,
+  },
+  passwordFeedback: {
+    fontSize: 12,
+    marginBottom: 5,
+    fontWeight: '600',
+  },
+  passwordRequirements: {
+    fontSize: 11,
+    color: '#8E8E93',
+    lineHeight: 16,
   },
 });
 

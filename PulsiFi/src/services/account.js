@@ -11,14 +11,15 @@ class AccountService {
    * @param {string} accountData.name - Account name
    * @param {string} accountData.type - Account type (cash_wallet, bank_account, etc.)
    * @param {number} accountData.balance - Initial balance (default: 0)
-   * @param {string} accountData.currency - Account currency (default: USD)
    * @param {string} accountData.portfolioId - Portfolio ID
    * @param {string} accountData.parentId - Parent account ID (optional, for sub-accounts)
    * @returns {Promise<Object>} Created account data
    */
   static async createAccount(accountData) {
     try {
-      const response = await ApiService.post('/accounts', accountData);
+      // Remove currency from accountData as we'll use portfolio's currency
+      const { currency, ...accountDataWithoutCurrency } = accountData;
+      const response = await ApiService.post('/accounts', accountDataWithoutCurrency);
       
       if (response.success) {
         // Don't show success alert here - let the calling function handle it
@@ -44,7 +45,6 @@ class AccountService {
           name: accountData.name,
           type: accountData.type,
           balance: accountData.balance || 0,
-          currency: accountData.currency,
           portfolioId: accountData.portfolioId
         };
       } else {

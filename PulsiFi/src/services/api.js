@@ -73,6 +73,37 @@ class ApiService {
         }
       }
 
+      // Handle specific auth errors
+      if (response.status === 400 && data.error) {
+        if (data.error.code === 'USER_NOT_FOUND') {
+          if (showAlerts) {
+            AlertService.error(data.message || 'Account not found. Please check your email or register.');
+          }
+          throw new Error(data.message || 'Account not found');
+        }
+        
+        if (data.error.code === 'INVALID_CREDENTIALS') {
+          if (showAlerts) {
+            AlertService.error(data.message || 'Incorrect password. Please try again.');
+          }
+          throw new Error(data.message || 'Incorrect password');
+        }
+        
+        if (data.error.code === 'USER_ALREADY_EXISTS') {
+          if (showAlerts) {
+            AlertService.error(data.message || 'Account already exists. Please login instead.');
+          }
+          throw new Error(data.message || 'Account already exists');
+        }
+        
+        if (data.error.code === 'WEAK_PASSWORD') {
+          if (showAlerts) {
+            AlertService.error(data.message || 'Password does not meet security requirements.');
+          }
+          throw new Error(data.message || 'Weak password');
+        }
+      }
+
       // Handle general 401 errors (token expired without specific error code)
       if (response.status === 401) {
         // Token is invalid or expired, logout user

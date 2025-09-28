@@ -6,10 +6,12 @@ import { useAlert } from '../context/AlertContext';
 import AccountService from '../services/account';
 import CategoryService from '../services/category';
 import TransactionService from '../services/transaction';
+import { useCurrency } from '../context/CurrencyContext';
 
 const AddTransactionScreen = ({ navigation }) => {
   const theme = useTheme();
   const { showAlert } = useAlert();
+  const { activeCurrencySymbol } = useCurrency();
   const [transactionType, setTransactionType] = useState('expense');
   const [amount, setAmount] = useState('0.00');
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -96,11 +98,11 @@ const AddTransactionScreen = ({ navigation }) => {
       // Check if result exists (success case)
       if (result && (result.id || result.success !== false)) {
         // Show success alert
-        showAlert({
-          type: 'success',
-          title: 'Transaction Created',
-          message: `${transactionType === 'income' ? 'Income' : 'Expense'} of $${amount} has been added successfully`
-        });
+      showAlert({
+        type: 'success',
+        title: 'Transaction Created',
+        message: `${transactionType === 'income' ? 'Income' : 'Expense'} of ${amount} has been added successfully`
+      });
         // Navigate back on success
         navigation.goBack();
       } else {
@@ -173,7 +175,6 @@ const AddTransactionScreen = ({ navigation }) => {
           <View style={styles.formSection}>
             <Text style={[styles.label, { color: theme.colors.textSecondary }]}>Amount</Text>
             <View style={[styles.amountInputContainer, { borderColor: theme.colors.border, backgroundColor: theme.colors.card }]}>
-              <Text style={[styles.currencySymbol, { color: theme.colors.text }]}>$</Text>
               <Input
                 value={amount}
                 onChangeText={setAmount}

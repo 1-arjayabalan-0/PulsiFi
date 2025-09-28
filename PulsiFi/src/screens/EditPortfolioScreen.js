@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Text, Input, Button, Select, useTheme } from '../components';
 import { useCurrency } from '../context/CurrencyContext';
 import PortfolioService from '../services/portfolio';
 
-const CreatePortfolioScreen = ({ navigation, route }) => {
+const EditPortfolioScreen = ({ navigation, route }) => {
   const theme = useTheme();
   const { portfolio } = route.params || {};
-  const isEditMode = !!portfolio;
-  
-  const [accountName, setAccountName] = useState(portfolio?.name || 'My Finances');
-  const [currencyId, setCurrencyId] = useState(portfolio?.currencyId || '');
+  const [accountName, setAccountName] = useState('');
+  const [currencyId, setCurrencyId] = useState('');
   const { currencies, getCurrencyOptions, setUserCurrency } = useCurrency();
   const [isLoading, setIsLoading] = useState(false);
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
-    // Set screen title based on mode
-    navigation.setOptions({
-      title: isEditMode ? 'Edit Portfolio' : 'Create Portfolio'
-    });
-  }, [navigation, isEditMode]);
+    // Set initial values from portfolio data
+    if (portfolio) {
+      setAccountName(portfolio.name || '');
+      setCurrencyId(portfolio.currencyId || '');
+    }
+  }, [portfolio]);
 
   useEffect(() => {
     // Get currency options and set them
@@ -30,55 +28,43 @@ const CreatePortfolioScreen = ({ navigation, route }) => {
       const options = getCurrencyOptions();
       setCurrencyOptions(options);
       
-      if (isEditMode && portfolio?.currencyId) {
-        // Set to portfolio's currency if in edit mode
-        setCurrencyId(portfolio.currencyId);
-        setSelectedOption(options.find(opt => opt.value === portfolio.currencyId));
-      } else {
-        // Set default currency to USD if available
-        const usdCurrency = currencies.find(c => c.code === 'USD');
-        if (usdCurrency) {
-          setCurrencyId(usdCurrency.id);
-          setSelectedOption(options.find(opt => opt.value === usdCurrency.id));
-        } else if (currencies[0]) {
-          setCurrencyId(currencies[0].id);
-          setSelectedOption(options.find(opt => opt.value === currencies[0].id));
+      // Set selected currency if we have a currencyId
+      if (currencyId) {
+        const option = options.find(opt => opt.value === currencyId);
+        if (option) {
+          setSelectedOption(option);
         }
       }
     }
-  }, [currencies, isEditMode, portfolio]);
+  }, [currencies, currencyId]);
 
   const handleCurrencyChange = (option) => {
     setCurrencyId(option.value);
     setSelectedOption(option);
   };
 
-  const handleSubmit = async () => {
+  const handleUpdatePortfolio = async () => {
     if (!accountName.trim() || !currencyId) {
       return;
     }
 
     setIsLoading(true);
     try {
+      // Update portfolio with currency ID
       const portfolioData = {
         name: accountName,
         currencyId: currencyId
       };
       
-      if (isEditMode) {
-        // Update existing portfolio
-        await PortfolioService.updatePortfolio(portfolio.id, portfolioData);
-      } else {
-        // Create new portfolio
-        const newPortfolio = await PortfolioService.createPortfolio(portfolioData);
-        // Set this as the user's active currency
-        await setUserCurrency(currencyId);
-      }
+      await PortfolioService.updatePortfolio(portfolio.id, portfolioData);
+      
+      // Set this as the user's active currency
+      await setUserCurrency(currencyId);
       
       // Navigate back on success
       navigation.goBack();
     } catch (error) {
-      console.error(`Failed to ${isEditMode ? 'update' : 'create'} portfolio:`, error);
+      console.error('Failed to update portfolio:', error);
     } finally {
       setIsLoading(false);
     }
@@ -106,12 +92,12 @@ const CreatePortfolioScreen = ({ navigation, route }) => {
       </View>
 
       <Button 
-        style={styles.createButton} 
-        onPress={handleSubmit}
+        style={styles.updateButton} 
+        onPress={handleUpdatePortfolio}
         variant="primary"
         loading={isLoading}
       >
-        {isEditMode ? 'Update Portfolio' : 'Create Portfolio'}
+        Update Portfolio
       </Button>
     </ScrollView>
   );
@@ -125,10 +111,10 @@ const styles = StyleSheet.create({
   formSection: {
     marginBottom: 20,
   },
-  createButton: {
+  updateButton: {
     marginTop: 20,
     marginBottom: 40,
   },
 });
 
-export default CreatePortfolioScreen;
+export default EditPortfolioScreen;

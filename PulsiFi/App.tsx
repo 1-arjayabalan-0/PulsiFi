@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AppNavigator from './src/navigation/AppNavigator';
 import ThemeProvider from './src/components/ThemeProvider';
 import { AlertProvider, useAlert } from './src/context/AlertContext';
+import { CurrencyProvider } from './src/context/CurrencyContext';
 import AlertService from './src/utils/alert';
 
 // Component to initialize AlertService with context methods
@@ -36,10 +37,12 @@ function App() {
       <ThemeProvider>
         <AlertProvider>
           <AlertServiceInitializer>
-            <SafeAreaProvider>
-              <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="#FFFFFF" />
-              <AppNavigator />
-            </SafeAreaProvider>
+            <CurrencyProvider>
+              <SafeAreaProvider>
+                <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} backgroundColor="#FFFFFF" />
+                <AppNavigator />
+              </SafeAreaProvider>
+            </CurrencyProvider>
           </AlertServiceInitializer>
         </AlertProvider>
       </ThemeProvider>

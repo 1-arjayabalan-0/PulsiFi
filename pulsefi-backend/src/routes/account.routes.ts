@@ -18,7 +18,6 @@ router.post(
     body('name').notEmpty().withMessage('Account name is required'),
     body('type').notEmpty().withMessage('Account type is required'),
     body('balance').optional().isNumeric().withMessage('Balance must be a number'),
-    body('currency').optional().isString().isLength({ min: 3, max: 3 }).withMessage('Currency must be a 3-letter code'),
     body('portfolioId').isUUID().withMessage('Valid portfolio ID is required'),
     body('parentId').optional().isUUID().withMessage('Parent account ID must be valid')
   ],

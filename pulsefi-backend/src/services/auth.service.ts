@@ -17,12 +17,27 @@ export const registerUser = withErrorHandling(
     });
 
     if (existingUser) {
-      throw AppError.badRequest('User with this email already exists');
+      throw AppError.badRequest('Account with this email already exists. Please login instead.', { code: ErrorCode.USER_ALREADY_EXISTS });
     }
 
     // Validate password
     if (password.length < 8) {
-      throw AppError.badRequest('Password must be at least 8 characters long', { code: ErrorCode.VALIDATION_ERROR });
+      throw AppError.badRequest('Password must be at least 8 characters long', { code: ErrorCode.WEAK_PASSWORD });
+    }
+
+    // Check for at least one number
+    if (!/\d/.test(password)) {
+      throw AppError.badRequest('Password must contain at least one number', { code: ErrorCode.WEAK_PASSWORD });
+    }
+
+    // Check for at least one uppercase letter
+    if (!/[A-Z]/.test(password)) {
+      throw AppError.badRequest('Password must contain at least one uppercase letter', { code: ErrorCode.WEAK_PASSWORD });
+    }
+
+    // Check for at least one special character
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      throw AppError.badRequest('Password must contain at least one special character', { code: ErrorCode.WEAK_PASSWORD });
     }
 
     // Hash password
@@ -69,13 +84,13 @@ export const loginUser = withErrorHandling(
 
     // Check if user exists
     if (!user) {
-      throw AppError.unauthorized('Invalid credentials');
+      throw AppError.badRequest('Account not found. Please check your email or register.', { code: ErrorCode.USER_NOT_FOUND });
     }
 
     // Compare passwords
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw AppError.unauthorized('Invalid credentials');
+      throw AppError.badRequest('Incorrect password. Please try again.', { code: ErrorCode.INVALID_CREDENTIALS });
     }
 
     // Check if email is verified

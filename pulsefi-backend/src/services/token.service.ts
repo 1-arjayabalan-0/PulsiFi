@@ -17,7 +17,7 @@ export interface TokenResponse {
 }
 
 // Constants
-const ACCESS_TOKEN_EXPIRY = '15m'; // 15 minutes
+const ACCESS_TOKEN_EXPIRY = '1d'; // 1 day
 const REFRESH_TOKEN_EXPIRY = '7d'; // 7 days
 
 /**

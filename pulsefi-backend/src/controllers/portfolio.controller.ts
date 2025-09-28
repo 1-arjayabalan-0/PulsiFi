@@ -4,7 +4,7 @@ import { sendSuccessResponse, sendErrorResponse, HttpStatus, ErrorCode } from '.
 
 export const createPortfolio = async (req: Request, res: Response) => {
   try {
-    const { name, currency = 'USD' } = req.body;
+    const { name, currencyId } = req.body;
     const userId = req.user?.id;
     
     if (!userId) {
@@ -16,11 +16,29 @@ export const createPortfolio = async (req: Request, res: Response) => {
       );
     }
 
+    // If currencyId is not provided, find the USD currency
+    let actualCurrencyId = currencyId;
+    if (!actualCurrencyId) {
+      const usdCurrency = await prisma.currency.findFirst({
+        where: { code: 'USD' }
+      });
+      if (usdCurrency) {
+        actualCurrencyId = usdCurrency.id;
+      }
+    }
+
     const portfolio = await prisma.portfolio.create({
       data: {
         name,
-        currency,
-        userId
+        currency: {
+          connect: { id: actualCurrencyId }
+        },
+        user: {
+          connect: { id: userId }
+        }
+      },
+      include: {
+        currency: true
       }
     });
 
@@ -62,13 +80,23 @@ export const getUserPortfolios = async (req: Request, res: Response) => {
           include: {
             subAccounts: true // Include sub-accounts
           }
-        }
+        },
+        currency: true // Include the currency relation
       }
+    });
+
+    // Transform the response to include currency information
+    const transformedPortfolios = portfolios.map(portfolio => {
+      return {
+        ...portfolio,
+        currencyCode: portfolio.currency?.code || 'USD', // Use the currency code from the relation
+        currencySymbol: portfolio.currency?.symbol || '$' // Include the currency symbol
+      };
     });
 
     sendSuccessResponse(
       res,
-      { portfolios },
+      { portfolios: transformedPortfolios },
       'Portfolios retrieved successfully',
       HttpStatus.OK
     );
@@ -125,7 +153,7 @@ export const getPortfolioById = async (req: Request, res: Response) => {
 export const updatePortfolio = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, currency } = req.body;
+    const { name, currencyId } = req.body;
     const userId = req.user?.id;
     
     if (!userId) {
@@ -154,13 +182,23 @@ export const updatePortfolio = async (req: Request, res: Response) => {
       where: { id },
       data: {
         name,
-        currency
+        currencyId
+      },
+      include: {
+        currency: true // Include currency information
       }
     });
 
+    // Transform the response to include currency information
+    const transformedPortfolio = {
+      ...updatedPortfolio,
+      currencyCode: updatedPortfolio.currency?.code || 'USD',
+      currencySymbol: updatedPortfolio.currency?.symbol || '$'
+    };
+
     res.json({
       message: 'Portfolio updated successfully',
-      portfolio: updatedPortfolio
+      portfolio: transformedPortfolio
     });
   } catch (error) {
     console.error('Update portfolio error:', error);

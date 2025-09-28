@@ -4,7 +4,16 @@ import { sendSuccessResponse, sendErrorResponse, HttpStatus, ErrorCode } from '.
 
 export const createAccount = async (req: Request, res: Response) => {
   try {
-    const { name, type, balance = 0, currency = 'USD', portfolioId, parentId } = req.body;
+    const { 
+      name, 
+      type, 
+      balance = 0, 
+      portfolioId, 
+      parentId,
+      bankId,
+      accountNumber,
+      routingNumber
+    } = req.body;
     const userId = req.user?.id;
 
     if (!userId) {
@@ -37,17 +46,36 @@ export const createAccount = async (req: Request, res: Response) => {
       }
     }
 
+    // If bankId is provided, check if bank exists
+    if (bankId) {
+      const bank = await prisma.bankMaster.findUnique({
+        where: { id: bankId }
+      });
+
+      if (!bank) {
+        return res.status(404).json({ message: 'Bank not found' });
+      }
+    }
+
     // Create account and update portfolio balance in a transaction
     const result = await prisma.$transaction(async (prisma) => {
+      // Get portfolio currency
+      const portfolioData = await prisma.portfolio.findUnique({
+        where: { id: portfolioId },
+        include: { currency: true }
+      });
+      
       // Create account
       const account = await prisma.account.create({
         data: {
           name,
           type,
           balance,
-          currency,
           portfolioId,
-          parentId
+          parentId,
+          bankId,
+          accountNumber,
+          routingNumber
         }
       });
 
